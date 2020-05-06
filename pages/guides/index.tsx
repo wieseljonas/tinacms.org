@@ -21,6 +21,7 @@ import { CardGrid, Card } from '../../components/ui/Cards'
 import RightArrowSvg from '../../public/svg/right-arrow.svg'
 import { CategoryCreatorPlugin } from '../../utils/plugins/guides/CategoryCreatorPlugin'
 import { usePlugins } from 'tinacms'
+import { GuideCreatorPlugin } from '../../utils/plugins/guides/GuideCreatorPlugin'
 
 const GuideTemplate = props => {
   let data = props.markdownFile.data
@@ -29,7 +30,7 @@ const GuideTemplate = props => {
   const markdownBody = data.markdownBody
   const excerpt = props.markdownFile.data.excerpt
 
-  usePlugins([CategoryCreatorPlugin])
+  usePlugins([CategoryCreatorPlugin, GuideCreatorPlugin])
 
   let navData = useMemo(() => {
     if (props.currentGuide) {

@@ -28,6 +28,7 @@ export const GuideCreatorPlugin: AddContentPlugin<any> = {
     const guidePath = path.join(guidesRoot, values.category, values.slug)
     const guideMetaPath = path.join(guidePath, 'meta.json')
     const overviewPath = path.join(guidePath, 'overview.md')
+    const overviewUrl = `/guides/${values.category}/${values.slug}/overview`
     const metaResponse = await cms.api.github.commit(
       guideMetaPath,
       getCachedFormData(guideMetaPath).sha,
@@ -35,8 +36,8 @@ export const GuideCreatorPlugin: AddContentPlugin<any> = {
         title: values.title,
         steps: [
           {
-            id: overviewPath,
-            slug: overviewPath,
+            id: overviewUrl,
+            slug: overviewUrl,
             title: 'Overview',
             data: './overview.md',
           },
@@ -64,6 +65,6 @@ export const GuideCreatorPlugin: AddContentPlugin<any> = {
     })
     // @ts-ignore you're drunk
     cms.alerts.success(`Created guide: '${values.title}'`)
-    window.location.href = `guides/${values.category}/${values.slug}/overview`
+    window.location.href = overviewUrl
   },
 }

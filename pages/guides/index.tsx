@@ -19,6 +19,8 @@ import {
 import { DocsNav, Overlay, DynamicLink } from '../../components/ui'
 import { CardGrid, Card } from '../../components/ui/Cards'
 import RightArrowSvg from '../../public/svg/right-arrow.svg'
+import { CategoryCreatorPlugin } from '../../utils/plugins/guides/CategoryCreatorPlugin'
+import { usePlugins } from 'tinacms'
 
 const GuideTemplate = props => {
   let data = props.markdownFile.data
@@ -26,6 +28,8 @@ const GuideTemplate = props => {
   const frontmatter = data.frontmatter
   const markdownBody = data.markdownBody
   const excerpt = props.markdownFile.data.excerpt
+
+  usePlugins([CategoryCreatorPlugin])
 
   let navData = useMemo(() => {
     if (props.currentGuide) {

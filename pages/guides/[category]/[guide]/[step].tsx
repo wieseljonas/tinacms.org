@@ -172,15 +172,16 @@ export const getStaticProps: GetStaticProps = async function(ctx) {
         filepath,
         ctx.previewData.github_access_token
       )
-      return b64DecodeUnicode(f.data.content)
+      return {
+        contents: b64DecodeUnicode(f.data.content),
+        sha: f.data.sha,
+      }
     }
-
-    console.log(path.join(githubPathToGuide, `${step}.md`))
 
     const tmpMarkdownFile = await getFromGithub(
       path.join(githubPathToGuide, `${step}.md`)
     )
-    const { data, content } = matter(tmpMarkdownFile)
+    const { data, content } = matter(tmpMarkdownFile.contents)
     markdownFile = {
       fileRelativePath: path.join(githubPathToGuide, `${step}.md`),
       data: {
@@ -188,10 +189,12 @@ export const getStaticProps: GetStaticProps = async function(ctx) {
         excerpt: await formatExcerpt(content),
         markdownBody: content,
       },
+      sha: tmpMarkdownFile.sha,
     }
-    guideMetaRaw = await getFromGithub(
+    const guideMetaRawData = await getFromGithub(
       path.join(githubPathToGuide, 'meta.json')
     )
+    guideMetaRaw = guideMetaRawData.contents
   } else {
     markdownFile = await readMarkdownFile(path.join(pathToGuide, `${step}.md`))
     guideMetaRaw = await readFile(path.join(pathToGuide, 'meta.json'))

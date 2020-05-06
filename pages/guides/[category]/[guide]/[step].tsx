@@ -26,6 +26,8 @@ import { useGithubMarkdownForm } from 'react-tinacms-github'
 import { OpenAuthoringSiteForm } from '../../../../components/layout/OpenAuthoringSiteForm'
 import { getContent as getGithubFiles } from 'next-tinacms-github'
 import { formatExcerpt } from '../../../../utils/blog_helpers'
+import { usePlugins } from 'tinacms'
+import { GuideStepCreatorPlugin } from '../../../../utils/plugins/guides/GuideStepCreatorPlugin'
 
 export default function GuideTemplate(props) {
   const [open, setOpen] = React.useState(false)
@@ -33,6 +35,10 @@ export default function GuideTemplate(props) {
   let [data, form] = useGithubMarkdownForm(props.markdownFile, {
     label: props.markdownFile.data.frontmatter.title,
   })
+
+  usePlugins([
+    new GuideStepCreatorPlugin(props.category, props.guide, props.currentGuide),
+  ])
 
   const frontmatter = data.frontmatter
   const markdownBody = data.markdownBody
@@ -203,6 +209,8 @@ export const getStaticProps: GetStaticProps = async function(ctx) {
   const guideMeta = JSON.parse(guideMetaRaw)
   return {
     props: {
+      category,
+      guide,
       preview: ctx.preview || null,
       currentGuide: guideMeta,
       markdownFile,
